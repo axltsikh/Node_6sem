@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+        
+    async function onGetClick(){
+        let response = await fetch("http://localhost:3000/api/db")
+        document.getElementById("output").innerHTML = await response.text();
+    }
+
+    async function onAddClick(){
+
+        let person = {
+            id: 0,
+            name: document.getElementById("nameInput").value,
+            bday: document.getElementById("bdayInput").value
+        }
+        let response = await fetch("http://localhost:3000/api/db",{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(person)
+        })
+        document.getElementById("nameInput").value = ""
+        document.getElementById("bdayInput").value = ""
+        document.getElementById("addResult").innerHTML = await response.text()
+        document.getElementById("updateResult").innerHTML = ""
+        document.getElementById("deleteResult").innerHTML = ""
+        onGetClick()
+    }
+
+    async function onDeleteClick(){
+        
+        let response = await fetch("http://localhost:3000/api/db?id=" + document.getElementById("deleteID").value,{
+            method: 'DELETE',
+        })
+        let result = await response.text();
+        document.getElementById("deleteID").value = ""
+        document.getElementById("deleteResult").innerHTML = "Удаленная строка: " + result
+        document.getElementById("addResult").innerHTML = ""
+        document.getElementById("updateResult").innerHTML = ""
+        onGetClick()
+    }
+
+    async function onUpdateClick(){
+
+        let person = {
+            id: document.getElementById("updateID").value,
+            name: document.getElementById("updateName").value,
+            bday: document.getElementById("updateBday").value
+        }
+        let response = await fetch("http://localhost:3000/api/db",{
+            method: 'PUT',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(person)
+        })
+        document.getElementById("updateResult").innerHTML = await response.text()
+        document.getElementById("deleteResult").innerHTML = ""
+        document.getElementById("addResult").innerHTML = ""
+        document.getElementById("updateID").value = ""
+        document.getElementById("updateName").value = ""
+        document.getElementById("updateBday").value = ""
+        onGetClick()
+    }
+
+</script>
+<body>
+    <div style="display: flex; margin-top: 5px; margin-left: 150px;">
+        <div>
+            <h2>Вывод</h2>
+            <button onclick="onGetClick()">Получить список</button>
+            <div id="output" style="width: 350px;"></div>
+        </div>
+        <div>
+            <h2>Добавление</h2>
+            <input placeholder="Имя" id="nameInput"/>
+            <br>
+            <input placeholder="Дата рождения" id="bdayInput">
+            <br>
+            <button onclick="onAddClick()">Добавить</button>
+            <div id="addResult"></div>
+        </div>
+        <div style="margin-left: 50px; display: inline;">
+            <h2>Удаление</h2>
+            <input placeholder="ID удаляемого человека" id="deleteID"/>
+            <br>
+            <button onclick="onDeleteClick()">Удалить</button>
+            <br>
+            <div id="deleteResult"></div>
+        </div>
+        <div style="margin-left: 50px;">
+            <h2>Изменение</h2>
+            <input placeholder="ID для изменения" id="updateID"/>
+            <br>
+            <input placeholder="Имя" id="updateName"/>
+            <br>
+            <input placeholder="Дата рождения" id="updateBday">
+            <br>
+            <button onclick="onUpdateClick()">Обновить</button>
+            <div id="updateResult"></div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    async function sendEmail(){
+        let email={
+            message: document.getElementById("message").value,
+            sender: document.getElementById("sender").value,
+            reciever: document.getElementById("reciever").value,
+            password: document.getElementById("password").value
+        }
+        let response = await fetch("http://localhost:3000/",{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(email)
+        })
+        document.getElementById("message").value = "";
+        document.getElementById("sender").value = "";
+        document.getElementById("reciever").value = "";
+        document.getElementById("password").value = "";
+        let result = await response.text();
+        alert(result);
+    }
+    function removeByteOrderMark(str){
+        return str.replace(/^\ufeff/g,"")
+    }
+</script>
+<body>
+    <input type="text" id="message" placeholder="Сообщение">
+    <br>
+    <input type="text" id="sender" placeholder="EMAIL отправителя">
+    <br>
+    <input type="text" id="password" placeholder="пароль отправителя">
+    <br>
+    <input type="text" id="reciever" placeholder="EMAIL получателя">
+    <br>
+    <button onclick="sendEmail()">Отправить</button>
+</body>
+</html>
