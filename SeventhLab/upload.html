@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="text" id="id" name="id" required placeholder="ID"><br>
+        <input type="file" name="photo"><br>
+        <input type="submit">
+    </form>
+</body>
+
+<script>
+
+    function SendData() {
+        const form = document.querySelector('form');
+        const formData = new FormData(form);
+
+        fetch('http://localhost:3000/upload', {
+            method: 'POST',
+            body: formData,
+
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+
+
+</script>
+
+</html>

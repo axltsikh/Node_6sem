@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <div style="display: inline-block;">
+            <div style="display: inline-block;" class="first">
+            </div>
+            <div style="display: inline-block;" class="second">
+            </div>
+            <div style="display: inline-block;" class="third">
+            </div>
+        </div>
+        <div class="pages">
+        </div>
+    </center>
+</body>
+<script>
+    let turtles = []
+    fetch("http://localhost:3000/api/turtles")
+        .then((response) => response.json())
+        .then((data) => {
+          turtles = JSON.parse(JSON.stringify(data));
+          console.log(turtles);
+          createPageButtons()
+        }).catch((error) => console.error(error));
+
+    function createPageButtons(){
+        var counter = 0;
+
+        for(var i =0;i<turtles.length;i+=3){
+            console.log(i);
+            counter++
+        }
+        for(var a = 0;a<counter;a++){
+            createSingleButton(a+1);
+        }
+        console.log(counter);
+        if(counter!=0){
+            var pages = document.getElementById("1")
+            pages.click()
+        }
+    }
+    function createSingleButton(index){
+        var button = document.createElement("button");
+        button.textContent = index
+        button.id=index
+        button.addEventListener("click",()=>createPage(index))
+        var pages = document.querySelector(".pages")
+        pages.appendChild(button)
+    }
+    function createPage(number){
+        var parent = document.querySelector(".first")
+        parent.innerHTML='';
+        var parent = document.querySelector(".second")
+        parent.innerHTML='';
+        var parent = document.querySelector(".third")
+        parent.innerHTML='';
+        checkNumber((number-1)*3,1)
+        checkNumber((number-1)*3+1,2)
+        checkNumber((number-1)*3+2,3)
+    }
+    function checkNumber(index,divNumber){
+        if(index===turtles.length){
+            return
+        }
+        if(divNumber===1){
+            var parent = document.querySelector(".first")
+        }else if(divNumber===2){
+            var parent = document.querySelector(".second")
+        }else if(divNumber===3){
+            var parent = document.querySelector(".third")
+        }
+        var name = document.createElement("div")
+        if(name.textContent=turtles[index]===null){
+            return
+        }
+        parent.innerHTML='';
+        var img = document.createElement("img")
+        img.src = "http://localhost:3000/" + turtles[index].image || "https://via.placeholder.com/200x200";
+        img.width=100
+        img.height=100
+        var color = document.createElement("div")
+        name.textContent=turtles[index].name
+        var weapon = document.createElement("div")
+        if(turtles[index].weaponID_WeaponID===null){
+            weapon.textContent='undind'
+        }else{
+            weapon.textContent=turtles[index].weaponID_WeaponID.name
+        }
+        var firstPizza = document.createElement("div")
+        if(turtles[index].favouritePizzaID_FavouritePizzaID===null){
+            firstPizza.textContent='unbind'
+        }else{
+            firstPizza.textContent=turtles[index].favouritePizzaID_FavouritePizzaID.name
+        }
+        var secondPizza = document.createElement("div")
+        if(turtles[index].secondFavouritePizzaID_SecondFavouritePizzaID===null){
+            secondPizza.textContent='undind'
+        }else{
+            secondPizza.textContent=turtles[index].secondFavouritePizzaID_SecondFavouritePizzaID.name
+        }
+        parent.appendChild(name)
+        parent.appendChild(img)
+        parent.appendChild(color)
+        parent.appendChild(weapon)
+        parent.appendChild(firstPizza)
+        parent.appendChild(secondPizza)
+    }
+</script>
+</html>
